@@ -2,7 +2,7 @@
 A collection of my iOS widgets for the Scriptable app
 
 ## iPhone Local Store Availability
-Shows whether your desired iPhone is available for pickup at your nearest Apple Store. In this example, the left one is an iPhone SE (2020) and the right one is an iPhone 14 Pro.
+Shows whether your desired iPhone is available for pickup at your nearest Apple Store. In this example, the left one is an iPhone SE (2020) and the right one is an iPhone 14 Pro. Tapping on the icon will open the Apple Store app with your chosen product to assure a fast order process.
 
 <img src="https://user-images.githubusercontent.com/9810829/190391202-310f1661-92f8-4ba1-84a9-1c71a8947525.jpg" width="400"/>
 
