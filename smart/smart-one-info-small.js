@@ -146,7 +146,7 @@ async function createWidget() {
     temperatureLabelStack.cornerRadius = 4
     temperatureLabelStack.size = new Size(68, 14)
 
-    let temperatureLabel = temperatureLabelStack.addText('Temperatur');
+    let temperatureLabel = temperatureLabelStack.addText('Temperature');
     temperatureLabel.font = Font.semiboldSystemFont(10);
     temperatureLabel.textColor = labelTextColor;
 
@@ -167,7 +167,7 @@ async function createWidget() {
     remainingKilometerLabelStack.cornerRadius = 4
     remainingKilometerLabelStack.size = new Size(68, 14)
 
-    let remainingKilometerLabel = remainingKilometerLabelStack.addText("Reichweite");
+    let remainingKilometerLabel = remainingKilometerLabelStack.addText("Range");
     remainingKilometerLabel.font = Font.semiboldSystemFont(10);
     remainingKilometerLabel.textColor = labelTextColor;
 
@@ -186,7 +186,7 @@ async function createWidget() {
     locationTextStack.cornerRadius = 4
     locationTextStack.size = new Size(56, 14)
 
-    let locationText = locationTextStack.addText('Standort');
+    let locationText = locationTextStack.addText('Location');
     locationText.font = Font.semiboldSystemFont(10);
     locationText.textColor = labelTextColor;
 
