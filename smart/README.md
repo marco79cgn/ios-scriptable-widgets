@@ -14,3 +14,9 @@
 - Insert your real username, password and vin as widget parameter, separated by semicolon: `username;password;vin`
     <img src="https://github.com/marco79cgn/ios-scriptable-widgets/assets/9810829/738695f6-0c7e-4bf3-87e9-440777b2d82c" width="250"/>
 - optional: you could also edit your credentials inside the script (lines 20-22), but never give this script to anyone with your hardcoded credentials!
+
+### ToDo
+
+- there is no darkmode yet
+- controlling the car (e.g. temperature) not yet implemented and difficult because of Smart internals (only one user can be logged in at the same time)
+- Tip: use another user for this script who has access to your car through the digital key
