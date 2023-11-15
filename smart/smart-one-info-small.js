@@ -90,6 +90,7 @@ canvas.respectScreenScale = true;
 
 let widget = new ListWidget();
 widget.url = 'hellosmart://';
+widget.backgroundColor = Color.white();
 widget = await createWidget();
 Script.setWidget(widget);
 Script.complete();
