@@ -70,7 +70,7 @@ if (carData.code == 1402) {
 
 if (carData.code == 1000) {
   geoData = await getGeoData();
-  const lockIt = await lockCar(credentials.apiAccessToken);
+  // const lockIt = await lockCar(credentials.apiAccessToken);
 } else {
   carData = '';
 }
