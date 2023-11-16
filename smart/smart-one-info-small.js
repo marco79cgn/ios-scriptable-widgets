@@ -509,10 +509,16 @@ async function getGeoData() {
   let longitude = carData.data.vehicleStatus.basicVehicleStatus.position.longitude;
   longitude = longitude / 3600000;
   console.log('longitude: ' + longitude);
-  const url = 'https://geocode.maps.co/reverse?lat=' + latitude + '&lon=' + longitude;
-  const req = new Request(url);
-  const geoData = await req.loadJSON();
-  console.log('geo data: ' + JSON.stringify(geoData));
+  let geoData
+  if(longitude == 0 && latitude == 0) {
+    console.log("data unavailable")
+    geoData = { address: { road: "Nicht verfügbar", house_number: "", postcode: "", city: "", city_district: "" }}
+  } else {
+    const url = 'https://geocode.maps.co/reverse?lat=' + latitude + '&lon=' + longitude;
+    const req = new Request(url);
+    geoData = await req.loadJSON();
+    console.log('geo data: ' + JSON.stringify(geoData));
+  }
   return geoData;
 }
 
