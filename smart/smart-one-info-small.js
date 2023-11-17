@@ -512,7 +512,7 @@ async function getGeoData() {
   let geoData
   if(longitude == 0 && latitude == 0) {
     console.log("data unavailable")
-    geoData = { address: { road: "Nicht verfügbar", house_number: "", postcode: "", city: "", city_district: "" }}
+    geoData = { address: { road: "unavailable", house_number: "", postcode: "", city: "", city_district: "" }}
   } else {
     const url = 'https://geocode.maps.co/reverse?lat=' + latitude + '&lon=' + longitude;
     const req = new Request(url);
