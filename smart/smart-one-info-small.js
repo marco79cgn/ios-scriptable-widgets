@@ -66,7 +66,7 @@ function detectLanguage() {
   chunkLoop: for (let language of userLanguages) {
     for (let availableLanguage of availableLanguages) {
       console.log("comparing: " + language + " / " + availableLanguage);
-      if (language.startsWith(availableLanguage + "-")) {
+      if (language.startsWith(availableLanguage)) {
         console.log("We have a match!");
         selected_language = availableLanguage;
         break chunkLoop;
