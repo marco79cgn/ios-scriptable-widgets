@@ -30,6 +30,69 @@ const labelColor = new Color('#000080'); // widget label color
 const labelTextColor = Color.white(); // widget label text color
 const textColor = new Color('#34443c'); // widget text color
 
+// LANGUAGES
+const languageMap = {
+  en: {
+    temperature: 'Temperature',
+    range: 'Range',
+    location: 'Location',
+    unavailable: 'unavailable',
+  },
+
+  de: {
+    temperature: 'Temperatur',
+    range: 'Reichweite',
+    location: 'Standort',
+    unavailable: 'Nicht verfügbar',
+  },
+
+  fr: {
+    temperature: 'Température',
+    range: 'Autonomie',
+    location: 'Position',
+    unavailable: 'indisponible',
+  },
+};
+
+function detectLanguage() {
+
+  let selected_language = "en"
+
+  let userLanguages = Device.preferredLanguages();
+  userLanguages = userLanguages.map(l => l.toLowerCase());
+  let availableLanguages = Object.keys(languageMap);
+
+  // Try to find a match based on the first part of the available languages (i.e., match "es" for "es-ES")
+  chunkLoop: for (let language of userLanguages) {
+    for (let availableLanguage of availableLanguages) {
+      console.log("comparing: " + language + " / " + availableLanguage);
+      if (language.startsWith(availableLanguage + "-")) {
+        console.log("We have a match!");
+        selected_language = availableLanguage;
+        break chunkLoop;
+      }
+    }
+  }
+  return selected_language
+}
+const detectedLanguage = detectLanguage()
+
+console.log("========== LANGUAGES ===========");
+console.log("Language: " + Device.language()); // fr is missing in scriptable choices, will return en instead
+console.log("Preferred Languages: " + Device.preferredLanguages());
+console.log("Locale: " + Device.locale());
+console.log("detected language: " + detectedLanguage);
+console.log("================================");
+
+
+// create an object to be use for languages
+// example: lang.range
+function getLanguage() {
+  return languageMap[detectedLanguage];
+}
+let lang = getLanguage();
+
+
 //
 // main workflow
 //
@@ -57,7 +120,7 @@ if (carData.code == 1402) {
   } else {
     console.log('Api token expired and neees to be refreshed!');
     let refreshedApiAccessToken = await getCurrentToken();
-    if(!refreshedApiAccessToken) {
+    if (!refreshedApiAccessToken) {
       cachedCredentials = await initialLogin();
       credentials = cachedCredentials;
       refreshedApiAccessToken = await getCurrentToken();
@@ -70,7 +133,7 @@ if (carData.code == 1402) {
 
 if (carData.code == 1000) {
   geoData = await getGeoData();
-  // const lockIt = await lockCar(credentials.apiAccessToken);
+  //  const lockIt = await lockCar(credentials.apiAccessToken);
 } else {
   carData = '';
 }
@@ -108,7 +171,7 @@ async function createWidget() {
     let iconStack = widget.addStack()
     iconStack.layoutHorizontally()
     iconStack.addSpacer(50)
-    
+
     let smartIconImage = iconStack.addImage(smartIcon);
     smartIconImage.imageSize = new Size(42, 10);
     smartIconImage.centerAlignImage();
@@ -146,7 +209,7 @@ async function createWidget() {
     temperatureLabelStack.cornerRadius = 4
     temperatureLabelStack.size = new Size(68, 14)
 
-    let temperatureLabel = temperatureLabelStack.addText('Temperature');
+    let temperatureLabel = temperatureLabelStack.addText(lang.temperature);
     temperatureLabel.font = Font.semiboldSystemFont(10);
     temperatureLabel.textColor = labelTextColor;
 
@@ -167,7 +230,7 @@ async function createWidget() {
     remainingKilometerLabelStack.cornerRadius = 4
     remainingKilometerLabelStack.size = new Size(68, 14)
 
-    let remainingKilometerLabel = remainingKilometerLabelStack.addText("Range");
+    let remainingKilometerLabel = remainingKilometerLabelStack.addText(lang.range);
     remainingKilometerLabel.font = Font.semiboldSystemFont(10);
     remainingKilometerLabel.textColor = labelTextColor;
 
@@ -186,12 +249,12 @@ async function createWidget() {
     locationTextStack.cornerRadius = 4
     locationTextStack.size = new Size(56, 14)
 
-    let locationText = locationTextStack.addText('Location');
+    let locationText = locationTextStack.addText(lang.location);
     locationText.font = Font.semiboldSystemFont(10);
     locationText.textColor = labelTextColor;
 
     widget.addSpacer(1)
-    
+
     let street = geoData.address.road + ' ' + geoData.address.house_number;
     let geoPositionStreetTxt = widget.addText(street);
     geoPositionStreetTxt.font = Font.semiboldSystemFont(12);
@@ -226,9 +289,9 @@ async function createWidget() {
 async function getCurrentToken() {
   const timestamp = Date.now().toString();
   const nonce = randomHexString(16);
-  const params = {identity_type: 'smart'};
+  const params = { identity_type: 'smart' };
   let url = '/auth/account/session/secure';
-  let data = {accessToken: credentials.access_token};
+  let data = { accessToken: credentials.access_token };
   const sign = createSignature(nonce, params, timestamp, 'POST', url, data);
   url = 'https://api.ecloudeu.com/auth/account/session/secure?identity_type=smart';
   let req = new Request(url);
@@ -254,10 +317,10 @@ async function getCurrentToken() {
     'x-signature': sign,
     'x-timestamp': timestamp
   };
-  req.body = JSON.stringify({'accessToken': credentials.access_token});
+  req.body = JSON.stringify({ 'accessToken': credentials.access_token });
   let result = await req.loadJSON();
   console.log(result);
-  if(result.code == 1501) { 
+  if (result.code == 1501) {
     console.log("Both access and login token expired. Logging in from the beginning.")
     return null
   }
@@ -273,7 +336,7 @@ async function getCarInfo(access_token) {
   const timestamp = Date.now().toString();
   const nonce = randomHexString(16);
   let url = '/remote-control/vehicle/status/' + vin;
-  const params = {latest: true, target: 'basic%2Cmore', userId: credentials.userId};
+  const params = { latest: true, target: 'basic%2Cmore', userId: credentials.userId };
   const sign = createSignature(nonce, params, timestamp, 'GET', url);
   url = 'https://api.ecloudeu.com' + url + '?latest=true&target=basic%2Cmore&userId=' + credentials.userId;
   let req = new Request(url);
@@ -510,9 +573,13 @@ async function getGeoData() {
   longitude = longitude / 3600000;
   console.log('longitude: ' + longitude);
   let geoData
-  if(longitude == 0 && latitude == 0) {
+  //let applanguage = Device.language();
+  let applanguage = Device.preferredLanguages();
+
+  console.log(applanguage);
+  if (longitude == 0 && latitude == 0) {
     console.log("data unavailable")
-    geoData = { address: { road: "unavailable", house_number: "", postcode: "", city: "", city_district: "" }}
+    geoData = { address: { road: lang.unavailable, house_number: "", postcode: "", city: "", city_district: "" } }
   } else {
     const url = 'https://geocode.maps.co/reverse?lat=' + latitude + '&lon=' + longitude;
     const req = new Request(url);
