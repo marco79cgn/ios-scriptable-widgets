@@ -456,7 +456,7 @@ async function initialLogin() {
 async function saveCredentials(credentials) {
   const fm = FileManager.iCloud();
   const dir = fm.documentsDirectory();
-  const path = fm.joinPath(dir, 'smart-credentials.json');
+  const path = fm.joinPath(dir, 'smart-credentials-' + userName + '.json');
   fm.writeString(path, JSON.stringify(credentials));
 }
 
@@ -465,7 +465,7 @@ async function loadCachedCredentials() {
   // load existing credentials from iCloud Drive
   const fm = FileManager.iCloud();
   const dir = fm.documentsDirectory();
-  const path = fm.joinPath(dir, 'smart-credentials.json');
+  const path = fm.joinPath(dir, 'smart-credentials-' + userName + '.json');
   const credentials = Data.fromFile(path);
   if (credentials != null) {
     return JSON.parse(credentials.toRawString());
