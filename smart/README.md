@@ -7,7 +7,7 @@
 ### Setup
 
 - Create a folder named `modules` inside your iCloud Drive Scriptable folder.
-- Download the file [hashes.js](https://github.com/marco79cgn/ios-scriptable-widgets/blob/main/smart/modules/hashes.js) into the modules folder you just created
+- Download the file [hashes.js](https://raw.githubusercontent.com/marco79cgn/ios-scriptable-widgets/main/smart/modules/hashes.js) into the modules folder you just created
 - Open the Scriptable app on your iPhone, click on the "+" sign on the upper right, copy the [source code](https://raw.githubusercontent.com/marco79cgn/ios-scriptable-widgets/main/smart/smart-one-info-small.js) above and paste it inside.
 - Name the script (at the top of the App) and save it by pressing "Done" in the upper left.
 - Go to your homescreen, long press anywhere and configure a new Scriptable widget with small size. Assign the created widget.
