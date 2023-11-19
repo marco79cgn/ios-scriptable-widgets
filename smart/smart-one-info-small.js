@@ -5,13 +5,15 @@ const hashes = importModule('modules/hashes');
 let userName;
 let password;
 let vin;
+let model;
 const param = args.widgetParameter;
 if (param != null && param.length > 0) {
   const paramArray = param.split(";")
-  if (paramArray.length == 3) {
+  if (paramArray.length == 4) {
     userName = paramArray[0]
     password = paramArray[1]
     vin = paramArray[2]
+    model = paramArray[3]
   } else {
     console.log('Error reading user credentials.');
   }
@@ -21,6 +23,7 @@ if (param != null && param.length > 0) {
   vin = 'HE***';
   userName = 'm***@***.de';
   password = '***';
+  model = 'HX1ES01A51EU010251';
 }
 const deviceId = randomHexString(16);
 let apiTokenRefreshed = false;
@@ -185,7 +188,7 @@ async function createWidget() {
       batteryLevel.toString() + '%'
     );
 
-    const carIcon = await getImage('car.png');
+    const carIcon = await getImage(model + '.png');
     let carIconImage = carStack.addImage(carIcon);
     carIconImage.imageSize = new Size(66, 51);
     carIconImage.centerAlignImage();
@@ -602,7 +605,7 @@ async function getImage(image) {
     if (image === 'smart-logo.png') {
       imageUrl = 'https://i.imgur.com/MM0UI31.png';
     } else {
-      imageUrl = 'https://s7.future.smart.com/is/image/smarteurope/ppo_HX1ETD3A61EU010471:16-9?$smartResponsiveHiDPI$&wid=305&hei=232';
+      imageUrl = 'https://s7.future.smart.com/is/image/smarteurope/ppo_' + model + ':16-9?$smartResponsiveHiDPI$&wid=305&hei=232';
     }
     let iconImage = await loadImage(imageUrl);
     fm.writeImage(path, iconImage);
