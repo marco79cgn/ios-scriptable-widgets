@@ -138,7 +138,6 @@ if (carData.code == 1402) {
 
 if (carData.code == 1000) {
   geoData = await getGeoData();
-  //  const lockIt = await lockCar(credentials.apiAccessToken);
 } else {
   carData = '';
 }
@@ -376,66 +375,6 @@ async function getCarInfo(access_token) {
 
   console.log(carData);
   return carData;
-}
-
-async function lockCar(access_token) {
-  const timestamp = Date.now().toString();
-  const nonce = randomHexString(16);
-  let url = '/remote-control/vehicle/telematics/' + vin;
-  const params = {};
-  const payload = {
-    command: 'start',
-    creator: 'tc',
-    operationScheduling: {
-      duration: 0,
-      interval: 0,
-      occurs: 1,
-      recurrentOperation: false,
-    },
-    serviceId: 'RDL_2',
-    serviceParameters: [
-      {
-        key: 'door',
-        value: 'all',
-      },
-    ],
-    timestamp: Date.now(),
-  };
-  const sign = createSignature(nonce, params, timestamp, 'PUT', url, payload);
-  url = 'https://api.ecloudeu.com' + url;
-  let req = new Request(url);
-  req.method = 'PUT';
-  req.headers = {
-    'x-app-id': 'SmartAPPEU',
-    'accept': 'application/json;responseformat=3',
-    'x-agent-type': 'iOS',
-    'x-device-type': 'mobile',
-    'x-operator-code': 'SMART',
-    'x-device-identifier': deviceId,
-    'x-env-type': 'production',
-    'x-version': 'smartNew',
-    'accept-language': 'en_US',
-    'x-api-signature-version': '1.0',
-    'x-api-signature-nonce': nonce,
-    'x-device-manufacture': 'Apple',
-    'x-device-brand': 'Apple',
-    'x-device-model': 'iPhone',
-    'x-agent-version': '17.1',
-    'authorization': access_token,
-    'x-vehicle-identifier': vin,
-    'content-type': 'application/json; charset=utf-8',
-    'user-agent': 'Hello smart/1.4.0 (iPhone; iOS 17.1; Scale/3.00)',
-    'x-signature': sign,
-    'x-timestamp': timestamp
-  };
-  req.body = JSON.stringify(payload);
-  // console.log("request object: " + JSON.stringify(req))
-  let lockResult = await req.loadJSON();
-  const statusCode = req.response.statusCode;
-  console.log('status code: ' + statusCode);
-  // console.log(JSON.stringify(req.response))
-  console.log(lockResult);
-  return lockResult;
 }
 
 // sign http requests for smart api
