@@ -169,7 +169,7 @@ async function createWidget() {
 
   if (carData) {
     const batteryLevel = carData.data.vehicleStatus.additionalVehicleStatus.electricVehicleStatus.chargeLevel;
-    widget.setPadding(13, 13, 13, 13);
+    widget.setPadding(6, 13, 13, 13);
 
     let iconStack = widget.addStack()
     iconStack.layoutHorizontally()
@@ -260,7 +260,7 @@ async function createWidget() {
 
     let street = geoData.address.road + ' ' + geoData.address.house_number;
     let geoPositionStreetTxt = widget.addText(street);
-    geoPositionStreetTxt.font = Font.semiboldSystemFont(12);
+    geoPositionStreetTxt.font = Font.semiboldSystemFont(11);
     geoPositionStreetTxt.textColor = textColor;
     geoPositionStreetTxt.lineLimit = 1;
     geoPositionStreetTxt.minimumScaleFactor = 0.8;
@@ -272,9 +272,9 @@ async function createWidget() {
     geoPositionCityTxt.textColor = textColor;
     geoPositionCityTxt.lineLimit = 1;
   } else {
-    let cowboyIconImage = widget.addImage(smartIcon);
-    cowboyIconImage.imageSize = new Size(70, 14);
-    cowboyIconImage.centerAlignImage();
+    let smartIconImage = widget.addImage(smartIcon);
+    smartIconImage.imageSize = new Size(70, 14);
+    smartIconImage.centerAlignImage();
 
     widget.addSpacer();
 
