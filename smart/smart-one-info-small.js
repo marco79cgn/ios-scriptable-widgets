@@ -5,15 +5,17 @@ const hashes = importModule('modules/hashes');
 let userName;
 let password;
 let vin;
-let model;
+let model = 'HX1ES01A51EU010251';
 const param = args.widgetParameter;
 if (param != null && param.length > 0) {
   const paramArray = param.split(";")
-  if (paramArray.length == 4) {
+  if (paramArray.length >= 3) {
     userName = paramArray[0]
     password = paramArray[1]
     vin = paramArray[2]
-    model = paramArray[3]
+    if(paramArray.length == 4) {
+      model = paramArray[3]
+    }
   } else {
     console.log('Error reading user credentials.');
   }
