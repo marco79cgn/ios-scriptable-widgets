@@ -14,7 +14,7 @@ try {
 let userName;
 let password;
 let vin;
-let model = 'HX1ES01A51EU010251';
+let model;
 const param = args.widgetParameter;
 if (param != null && param.length > 0) {
   const paramArray = param.split(";")
@@ -34,7 +34,6 @@ if (param != null && param.length > 0) {
   vin = 'HE***';
   userName = 'm***@***.de';
   password = '***';
-  model = 'HX1ES01A51EU010251';
 }
 
 const deviceId = randomHexString(16)
@@ -69,6 +68,7 @@ const languageMap = {
   }
 }
 
+// detects the user's language needed for translation
 function detectLanguage () {
   let selected_language = 'en'
   let userLanguages = Device.preferredLanguages()
@@ -117,11 +117,9 @@ if (credentials.hasOwnProperty('apiAccessToken')) {
 let geoData = ''
 
 let updateSession = await updateSessionForCar(credentials.apiAccessToken, vin)
-let carData = await getCarInfo(credentials.apiAccessToken)
-
-if (carData.code == 1402) {
+if (updateSession.code == 1402) {
   if (apiTokenRefreshed) {
-    console.log('Token expired and could not be refreshed!')
+    console.log('Api Token expired and could not be refreshed!')
   } else {
     console.log('Api token expired and neees to be refreshed!')
     let refreshedApiAccessToken = await getCurrentToken()
@@ -130,11 +128,15 @@ if (carData.code == 1402) {
       credentials = cachedCredentials
       refreshedApiAccessToken = await getCurrentToken()
     }
-    console.log('refreshed access-token: ' + refreshedApiAccessToken)
     apiTokenRefreshed = true
-    carData = await getCarInfo(refreshedApiAccessToken)
+    updateSession = await updateSessionForCar(credentials.apiAccessToken, vin)
   }
 }
+
+const allCars = await getAllCars(credentials.apiAccessToken)
+const car = allCars.data.list.find(o => o.vin === vin)
+model = car.matCode
+let carData = await getCarInfo(credentials.apiAccessToken)
 
 if (carData.code == 1000) {
   geoData = await getGeoData()
@@ -172,7 +174,7 @@ async function createWidget () {
     const batteryLevel =
       carData.data.vehicleStatus.additionalVehicleStatus.electricVehicleStatus
         .chargeLevel
-    widget.setPadding(6, 13, 13, 13)
+    widget.setPadding(4, 13, 2, 13)
 
     let iconStack = widget.addStack()
     iconStack.layoutHorizontally()
@@ -248,9 +250,8 @@ async function createWidget () {
 
     mainBatteryStack.addSpacer(1)
 
-    let remainingKilometer =
-      carData.data.vehicleStatus.additionalVehicleStatus.electricVehicleStatus
-        .distanceToEmptyOnBatteryOnly
+    let remainingKilometer = carData.data.vehicleStatus.additionalVehicleStatus.electricVehicleStatus.distanceToEmptyOnBatteryOnly
+    
     let remainingKilometerNo = mainBatteryStack.addText(
       Math.round(remainingKilometer) + ' KM'
     )
@@ -287,6 +288,7 @@ async function createWidget () {
     geoPositionCityTxt.font = Font.lightSystemFont(10)
     geoPositionCityTxt.textColor = textColor
     geoPositionCityTxt.lineLimit = 1
+
   } else {
     let smartIconImage = widget.addImage(smartIcon)
     smartIconImage.imageSize = new Size(70, 14)
@@ -353,6 +355,49 @@ async function getCurrentToken () {
   console.log('Saving new credentials with updated api access token.')
   await saveCredentials(credentials)
   return result.data.accessToken
+}
+
+// returns all cars of the user
+async function getAllCars (access_token) {
+  const timestamp = Date.now().toString()
+  const nonce = randomHexString(16)
+  const params = { needSharedCar: 1, userId: credentials.userId }
+  let url = '/device-platform/user/vehicle/secure'
+  const sign = createSignature(nonce, params, timestamp, 'GET', url)
+  url =
+    'https://api.ecloudeu.com' +
+    url +
+    '?needSharedCar=1&userId=' +
+    credentials.userId
+  let req = new Request(url)
+  req.method = 'GET'
+  req.headers = {
+    'x-app-id': 'SmartAPPEU',
+    accept: 'application/json;responseformat=3',
+    'x-agent-type': 'iOS',
+    'x-device-type': 'mobile',
+    'x-operator-code': 'SMART',
+    'x-device-identifier': deviceId,
+    'x-env-type': 'production',
+    'x-version': 'smartNew',
+    'accept-language': 'en_US',
+    'x-api-signature-version': '1.0',
+    'x-api-signature-nonce': nonce,
+    'x-device-manufacture': 'Apple',
+    'x-device-brand': 'Apple',
+    'x-device-model': 'iPhone',
+    'x-agent-version': '17.1',
+    authorization: access_token,
+    'content-type': 'application/json; charset=utf-8',
+    'user-agent': 'Hello smart/1.4.0 (iPhone; iOS 17.1; Scale/3.00)',
+    'x-signature': sign,
+    'x-timestamp': timestamp
+  }
+  const carsResult = await req.loadJSON()
+  const statusCode = req.response.statusCode
+  console.log('All Cars http status code: ' + statusCode)
+  console.log('All Cars api status code: ' + carsResult.code)
+  return carsResult
 }
 
 // get credentials for configured car/vin
