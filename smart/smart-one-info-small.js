@@ -87,7 +87,6 @@ function detectLanguage () {
   return selected_language
 }
 const detectedLanguage = detectLanguage()
-console.log('detected language: ' + detectedLanguage)
 
 // create an object to be use for languages
 // example: lang.range
@@ -102,7 +101,6 @@ let lang = getLanguage()
 let cachedCredentials = await loadCachedCredentials()
 const isEmpty = Object.entries(cachedCredentials).length === 0
 if (isEmpty) {
-  console.log('Cached credentials file is empty. Creating...')
   cachedCredentials = await initialLogin()
   credentials = cachedCredentials
 } else {
@@ -112,7 +110,7 @@ if (credentials.hasOwnProperty('apiAccessToken')) {
   console.log('Found apiAccessToken.')
 } else {
   console.log('apiAccessToken unavailable. Refreshing...')
-  await getCurrentToken()
+  await refreshApiAccessToken()
 }
 let geoData = ''
 
@@ -122,11 +120,11 @@ if (updateSession.code == 1402) {
     console.log('Api Token expired and could not be refreshed!')
   } else {
     console.log('Api token expired and neees to be refreshed!')
-    let refreshedApiAccessToken = await getCurrentToken()
+    let refreshedApiAccessToken = await refreshApiAccessToken()
     if (!refreshedApiAccessToken) {
       cachedCredentials = await initialLogin()
       credentials = cachedCredentials
-      refreshedApiAccessToken = await getCurrentToken()
+      refreshedApiAccessToken = await refreshApiAccessToken()
     }
     apiTokenRefreshed = true
     updateSession = await updateSessionForCar(credentials.apiAccessToken, vin)
@@ -307,7 +305,7 @@ async function createWidget () {
 }
 
 // refreshes the api access token (valid for a few hours)
-async function getCurrentToken () {
+async function refreshApiAccessToken () {
   const timestamp = Date.now().toString()
   const nonce = randomHexString(16)
   const params = { identity_type: 'smart' }
@@ -347,12 +345,8 @@ async function getCurrentToken () {
     )
     return null
   }
-  // console.log('Refreshed api access token ' + result.data.accessToken)
-  console.log('currentToken http status code: ' + req.response.statusCode)
-  console.log('currentToken api status code: ' + result.code)
   credentials.apiAccessToken = result.data.accessToken
   credentials.userId = result.data.userId
-  console.log('Saving new credentials with updated api access token.')
   await saveCredentials(credentials)
   return result.data.accessToken
 }
@@ -395,8 +389,6 @@ async function getAllCars (access_token) {
   }
   const carsResult = await req.loadJSON()
   const statusCode = req.response.statusCode
-  console.log('All Cars http status code: ' + statusCode)
-  console.log('All Cars api status code: ' + carsResult.code)
   return carsResult
 }
 
@@ -438,12 +430,7 @@ async function updateSessionForCar (access_token, vin) {
     'x-timestamp': timestamp
   }
   req.body = JSON.stringify(payload)
-  const carSessionResult = await req.loadJSON()
-  const statusCode = req.response.statusCode
-  console.log('CarSession http status code: ' + statusCode)
-  console.log('CarSession api status code: ' + carSessionResult.code)
-  //console.log(carSessionResult);
-  return carSessionResult
+  return await req.loadJSON()
 }
 
 async function getCarInfo (access_token) {
@@ -485,13 +472,7 @@ async function getCarInfo (access_token) {
     'x-signature': sign,
     'x-timestamp': timestamp
   }
-
-  let carData = await req.loadJSON()
-  const statusCode = req.response.statusCode
-  console.log('carInfo http status code: ' + statusCode)
-  console.log('carInfo api status code: ' + carData.code)
-  // console.log(carData);
-  return carData
+  return await req.loadJSON()
 }
 
 // sign http requests for smart api
@@ -513,9 +494,7 @@ ${timestamp}
 ${method}
 ${url}`
   const secret = atob('NzRlNzQ2OWFmZjUwNDJiYmJlZDdiYmIxYjM2YzE1ZTk=')
-  const result = new hashes.SHA1().b64_hmac(secret, payload)
-  //   console.log('Signing api request with hmac ' + result);
-  return result
+  return new hashes.SHA1().b64_hmac(secret, payload)
 }
 
 // initial login to get credentials for the first time or after login expiration
@@ -531,9 +510,7 @@ async function initialLogin () {
     'user-agent': 'Hello smart/1.4.0 (iPhone; iOS 17.1; Scale/3.00)',
     'content-type': 'application/json; charset=utf-8'
   }
-  let contextResult = await req.load()
-  console.log('Context result http status code: ' + req.response.statusCode)
-  // TODO: Check status code
+  await req.load()
   const urlParams = getUrlParams(req.response.url)
   const context = urlParams.context
 
@@ -557,7 +534,6 @@ async function initialLogin () {
     encodeURIComponent(password) +
     '&sessionExpiration=2592000&targetEnv=jssdk&include=profile%2Cdata%2Cemails%2Csubscriptions%2Cpreferences%2C&includeUserInfo=true&loginMode=standard&lang=de&APIKey=3_L94eyQ-wvJhWm7Afp1oBhfTGXZArUfSHHW9p9Pncg513hZELXsxCfMWHrF8f5P5a&source=showScreenSet&sdk=js_latest&authMode=cookie&pageURL=https%3A%2F%2Fapp.id.smart.com%2Flogin%3Fgig_ui_locales%3Dde-DE&sdkBuild=15482&format=json&riskContext=%7B%22b0%22%3A41187%2C%22b1%22%3A%5B0%2C2%2C3%2C1%5D%2C%22b2%22%3A4%2C%22b3%22%3A%5B%22-23%7C0.383%22%2C%22-81.33333587646484%7C0.236%22%5D%2C%22b4%22%3A3%2C%22b5%22%3A1%2C%22b6%22%3A%22Hello%20smart%2F1.4.0%20%28iPhone%3B%20iOS%2017.1%3B%20Scale%2F3.00%29%22%2C%22b7%22%3A%5B%5D%2C%22b8%22%3A%2216%3A33%3A26%22%2C%22b9%22%3A-60%2C%22b10%22%3Anull%2C%22b11%22%3Afalse%2C%22b12%22%3A%7B%22charging%22%3Afalse%2C%22chargingTime%22%3Anull%2C%22dischargingTime%22%3Anull%2C%22level%22%3A0.58%7D%2C%22b13%22%3A%5B5%2C%22360%7C760%7C24%22%2Cfalse%2Ctrue%5D%7D'
   let loginResult = await req.loadJSON()
-  console.log('Login token result http status code: ' + req.response.statusCode)
   const loginToken = loginResult.sessionInfo.login_token
 
   const authUrl =
@@ -578,8 +554,8 @@ async function initialLogin () {
   }
   const authResult = await req.load()
   req = new Request(req.response.url)
+  // follow redirect
   const finalAuthResult = await req.load()
-  console.log('Final auth result http status code: ' + req.response.statusCode)
   const tokens = getUrlParams(req.response.url)
   await saveCredentials(tokens)
   return tokens
@@ -658,7 +634,6 @@ async function getGeoData () {
       'https://geocode.maps.co/reverse?lat=' + latitude + '&lon=' + longitude
     const req = new Request(url)
     geoData = await req.loadJSON()
-    console.log('geo data: ' + JSON.stringify(geoData))
   }
   return geoData
 }
