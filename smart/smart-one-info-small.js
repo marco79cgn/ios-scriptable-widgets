@@ -507,7 +507,7 @@ async function initialLogin () {
     'x-app-id': 'SmartAPPEU',
     accept: 'application/json;responseformat=3',
     'x-requested-with': 'com.smart.hellosmart',
-    'user-agent': 'Hello smart/1.4.0 (iPhone; iOS 17.1; Scale/3.00)',
+    'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
     'content-type': 'application/json; charset=utf-8'
   }
   await req.load()
