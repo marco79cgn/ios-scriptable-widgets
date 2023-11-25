@@ -352,7 +352,7 @@ async function refreshApiAccessToken () {
 }
 
 // returns all cars of the user
-async function getAllCars (access_token) {
+async function getAllCars (apiAccessToken) {
   const timestamp = Date.now().toString()
   const nonce = randomHexString(16)
   const params = { needSharedCar: 1, userId: credentials.userId }
@@ -381,7 +381,7 @@ async function getAllCars (access_token) {
     'x-device-brand': 'Apple',
     'x-device-model': 'iPhone',
     'x-agent-version': '17.1',
-    authorization: access_token,
+    authorization: apiAccessToken,
     'content-type': 'application/json; charset=utf-8',
     'user-agent': 'Hello smart/1.4.0 (iPhone; iOS 17.1; Scale/3.00)',
     'x-signature': sign,
@@ -393,14 +393,14 @@ async function getAllCars (access_token) {
 }
 
 // get credentials for configured car/vin
-async function updateSessionForCar (access_token, vin) {
+async function updateSessionForCar (apiAccessToken, vin) {
   const timestamp = Date.now().toString()
   const nonce = randomHexString(16)
   const params = {}
   let url = '/device-platform/user/session/update'
   const payload = {
     vin: vin,
-    sessionToken: access_token,
+    sessionToken: apiAccessToken,
     language: ''
   }
   const sign = createSignature(nonce, params, timestamp, 'POST', url, payload)
@@ -423,7 +423,7 @@ async function updateSessionForCar (access_token, vin) {
     'x-device-brand': 'Apple',
     'x-device-model': 'iPhone',
     'x-agent-version': '17.1',
-    authorization: access_token,
+    authorization: apiAccessToken,
     'content-type': 'application/json; charset=utf-8',
     'user-agent': 'Hello smart/1.4.0 (iPhone; iOS 17.1; Scale/3.00)',
     'x-signature': sign,
@@ -433,7 +433,7 @@ async function updateSessionForCar (access_token, vin) {
   return await req.loadJSON()
 }
 
-async function getCarInfo (access_token) {
+async function getCarInfo (apiAccessToken) {
   const timestamp = Date.now().toString()
   const nonce = randomHexString(16)
   let url = '/remote-control/vehicle/status/' + vin
@@ -466,7 +466,7 @@ async function getCarInfo (access_token) {
     'x-device-brand': 'Apple',
     'x-device-model': 'iPhone',
     'x-agent-version': '17.1',
-    authorization: access_token,
+    authorization: apiAccessToken,
     'content-type': 'application/json; charset=utf-8',
     'user-agent': 'Hello smart/1.4.0 (iPhone; iOS 17.1; Scale/3.00)',
     'x-signature': sign,
