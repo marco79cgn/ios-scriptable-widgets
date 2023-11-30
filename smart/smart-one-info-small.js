@@ -272,7 +272,7 @@ async function createWidget () {
 
     // car location
     const road = geoData.address.road || ""
-    const houseNumber = geoData.address.house_number || "Unbekannt"
+    const houseNumber = geoData.address.house_number || ""
     let street = road + ' ' + houseNumber
     let geoPositionStreetTxt = widget.addText(street)
     geoPositionStreetTxt.font = Font.semiboldSystemFont(11)
@@ -280,7 +280,7 @@ async function createWidget () {
     geoPositionStreetTxt.lineLimit = 1
     geoPositionStreetTxt.minimumScaleFactor = 0.8
     const zip = geoData.address.postcode || ""
-    const city = geoData.address.city || "Unbekannt"
+    const city = geoData.address.city || ""
     let cityFormatted = zip +' ' + city
     let geoPositionCityTxt = widget.addText(cityFormatted)
     geoPositionCityTxt.font = Font.lightSystemFont(10)
