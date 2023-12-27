@@ -5,7 +5,7 @@
 <br>iOS Scriptable widget that shows basic information of your Smart #1 car like the current position and battery state. Tapping on the widget will open the official [Hello Smart app](https://apps.apple.com/de/app/hello-smart/id6443878915).
 
 ### Setup
-
+- Create your own (free) [Geocoding api key](https://geocode.maps.co/)
 - Create a folder named `modules` inside your iCloud Drive Scriptable folder.
 - Download the file [hashes.js](https://raw.githubusercontent.com/marco79cgn/ios-scriptable-widgets/main/smart/modules/hashes.js) into the modules folder you just created
 - Open the Scriptable app on your iPhone, click on the "+" sign on the upper right, copy the [source code](https://raw.githubusercontent.com/marco79cgn/ios-scriptable-widgets/main/smart/smart-one-info-small.js) above and paste it inside.
@@ -19,7 +19,6 @@
 ### ToDo
 
 - there is no real darkmode yet
-- controlling the car (e.g. temperature) not yet implemented and difficult because of Smart internals (only one user can be logged in at the same time)
 - Tip: use another user for this script who has access to your car through the digital key
 
 ### Disclaimer
