@@ -32,7 +32,7 @@ if (param != null && param.length > 0) {
   vin = '***'
   userName = '***'
   password = '***'
-  apiKey = '***'
+  apiKey = ''
 }
 
 const deviceId = randomHexString(16)
@@ -619,7 +619,7 @@ async function getGeoData () {
     carData.data.vehicleStatus.basicVehicleStatus.position.longitude
   longitude = longitude / 3600000
   let geoData
-  if (longitude == 0 && latitude == 0) {
+  if ( apiKey == '' || (longitude == 0 && latitude == 0)) {
     console.log('Geo data unavailable!')
     geoData = {
       address: {
