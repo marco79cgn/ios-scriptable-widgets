@@ -11,29 +11,28 @@ try {
   return
 }
 
-let userName;
-let password;
-let vin;
-let model;
-const param = args.widgetParameter;
+let userName
+let password
+let vin
+let model
+const param = args.widgetParameter
 if (param != null && param.length > 0) {
-  const paramArray = param.split(";")
-  if (paramArray.length >= 3) {
+  const paramArray = param.split(';')
+  if (paramArray.length >= 4) {
     userName = paramArray[0]
     password = paramArray[1]
     vin = paramArray[2]
-    if(paramArray.length == 4) {
-      model = paramArray[3]
-    }
+    apiKey = paramArray[3]
   } else {
-    console.log('Error reading user credentials.');
+    console.log('Error reading user credentials.')
   }
 } else {
   // insert credentials for testing inside the app
   // never share this code with your sensible data!
-  vin = 'HE***';
-  userName = 'm***@***.de';
-  password = '***';
+  vin = '***'
+  userName = '***'
+  password = '***'
+  apiKey = '***'
 }
 
 const deviceId = randomHexString(16)
@@ -248,7 +247,9 @@ async function createWidget () {
 
     mainBatteryStack.addSpacer(1)
 
-    let remainingKilometer = carData.data.vehicleStatus.additionalVehicleStatus.electricVehicleStatus.distanceToEmptyOnBatteryOnly
+    let remainingKilometer =
+      carData.data.vehicleStatus.additionalVehicleStatus.electricVehicleStatus
+        .distanceToEmptyOnBatteryOnly
 
     let remainingKilometerNo = mainBatteryStack.addText(
       Math.round(remainingKilometer) + ' KM'
@@ -271,22 +272,21 @@ async function createWidget () {
     widget.addSpacer(1)
 
     // car location
-    const road = geoData.address.road || ""
-    const houseNumber = geoData.address.house_number || "Unbekannt"
+    const road = geoData.address.road || ''
+    const houseNumber = geoData.address.house_number || 'Unbekannt'
     let street = road + ' ' + houseNumber
     let geoPositionStreetTxt = widget.addText(street)
     geoPositionStreetTxt.font = Font.semiboldSystemFont(11)
     geoPositionStreetTxt.textColor = textColor
     geoPositionStreetTxt.lineLimit = 1
     geoPositionStreetTxt.minimumScaleFactor = 0.8
-    const zip = geoData.address.postcode || ""
-    const city = geoData.address.city || "Unbekannt"
-    let cityFormatted = zip +' ' + city
+    const zip = geoData.address.postcode || ''
+    const city = geoData.address.city || 'Unbekannt'
+    let cityFormatted = zip + ' ' + city
     let geoPositionCityTxt = widget.addText(cityFormatted)
     geoPositionCityTxt.font = Font.lightSystemFont(10)
     geoPositionCityTxt.textColor = textColor
     geoPositionCityTxt.lineLimit = 1
-
   } else {
     let smartIconImage = widget.addImage(smartIcon)
     smartIconImage.imageSize = new Size(70, 14)
@@ -352,7 +352,7 @@ async function refreshApiAccessToken () {
 }
 
 // returns all cars of the user
-async function getAllCars (apiAccessToken) {
+async function getAllCars (access_token) {
   const timestamp = Date.now().toString()
   const nonce = randomHexString(16)
   const params = { needSharedCar: 1, userId: credentials.userId }
@@ -381,7 +381,7 @@ async function getAllCars (apiAccessToken) {
     'x-device-brand': 'Apple',
     'x-device-model': 'iPhone',
     'x-agent-version': '17.1',
-    authorization: apiAccessToken,
+    authorization: access_token,
     'content-type': 'application/json; charset=utf-8',
     'user-agent': 'Hello smart/1.4.0 (iPhone; iOS 17.1; Scale/3.00)',
     'x-signature': sign,
@@ -393,14 +393,14 @@ async function getAllCars (apiAccessToken) {
 }
 
 // get credentials for configured car/vin
-async function updateSessionForCar (apiAccessToken, vin) {
+async function updateSessionForCar (access_token, vin) {
   const timestamp = Date.now().toString()
   const nonce = randomHexString(16)
   const params = {}
   let url = '/device-platform/user/session/update'
   const payload = {
     vin: vin,
-    sessionToken: apiAccessToken,
+    sessionToken: access_token,
     language: ''
   }
   const sign = createSignature(nonce, params, timestamp, 'POST', url, payload)
@@ -423,7 +423,7 @@ async function updateSessionForCar (apiAccessToken, vin) {
     'x-device-brand': 'Apple',
     'x-device-model': 'iPhone',
     'x-agent-version': '17.1',
-    authorization: apiAccessToken,
+    authorization: access_token,
     'content-type': 'application/json; charset=utf-8',
     'user-agent': 'Hello smart/1.4.0 (iPhone; iOS 17.1; Scale/3.00)',
     'x-signature': sign,
@@ -433,7 +433,7 @@ async function updateSessionForCar (apiAccessToken, vin) {
   return await req.loadJSON()
 }
 
-async function getCarInfo (apiAccessToken) {
+async function getCarInfo (access_token) {
   const timestamp = Date.now().toString()
   const nonce = randomHexString(16)
   let url = '/remote-control/vehicle/status/' + vin
@@ -466,7 +466,7 @@ async function getCarInfo (apiAccessToken) {
     'x-device-brand': 'Apple',
     'x-device-model': 'iPhone',
     'x-agent-version': '17.1',
-    authorization: apiAccessToken,
+    authorization: access_token,
     'content-type': 'application/json; charset=utf-8',
     'user-agent': 'Hello smart/1.4.0 (iPhone; iOS 17.1; Scale/3.00)',
     'x-signature': sign,
@@ -507,7 +507,8 @@ async function initialLogin () {
     'x-app-id': 'SmartAPPEU',
     accept: 'application/json;responseformat=3',
     'x-requested-with': 'com.smart.hellosmart',
-    'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
+    'user-agent':
+      'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
     'content-type': 'application/json; charset=utf-8'
   }
   await req.load()
@@ -631,7 +632,7 @@ async function getGeoData () {
     }
   } else {
     const url =
-      'https://geocode.maps.co/reverse?lat=' + latitude + '&lon=' + longitude
+      'https://geocode.maps.co/reverse?lat=' + latitude + '&lon=' + longitude + '&api_key=' + apiKey
     const req = new Request(url)
     geoData = await req.loadJSON()
   }
