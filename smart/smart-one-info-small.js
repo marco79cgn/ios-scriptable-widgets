@@ -132,6 +132,7 @@ if (updateSession.code == 1402) {
 
 const allCars = await getAllCars(credentials.apiAccessToken)
 const car = allCars.data.list.find(o => o.vin === vin)
+
 model = car.matCode
 let carData = await getCarInfo(credentials.apiAccessToken)
 
@@ -272,16 +273,16 @@ async function createWidget () {
     widget.addSpacer(1)
 
     // car location
-    const road = geoData.address.road || ''
-    const houseNumber = geoData.address.house_number || 'Unbekannt'
+    const road = geoData.items[0].address.street || ''
+    const houseNumber = geoData.items[0].address.houseNumber || 'Unbekannt'
     let street = road + ' ' + houseNumber
     let geoPositionStreetTxt = widget.addText(street)
     geoPositionStreetTxt.font = Font.semiboldSystemFont(11)
     geoPositionStreetTxt.textColor = textColor
     geoPositionStreetTxt.lineLimit = 1
     geoPositionStreetTxt.minimumScaleFactor = 0.8
-    const zip = geoData.address.postcode || ''
-    const city = geoData.address.city || 'Unbekannt'
+    const zip = geoData.items[0].address.postalCode || ''
+    const city = geoData.items[0].address.city || 'Unbekannt'
     let cityFormatted = zip + ' ' + city
     let geoPositionCityTxt = widget.addText(cityFormatted)
     geoPositionCityTxt.font = Font.lightSystemFont(10)
@@ -632,7 +633,8 @@ async function getGeoData () {
     }
   } else {
     const url =
-      'https://geocode.maps.co/reverse?lat=' + latitude + '&lon=' + longitude + '&api_key=' + apiKey
+      'https://revgeocode.search.hereapi.com/v1/revgeocode?xnlp=CL_JSMv3.1.49.1&apikey=' 
+      + apiKey + '&at=' + latitude + '%2C' + longitude + '&limit=1'
     const req = new Request(url)
     geoData = await req.loadJSON()
   }
