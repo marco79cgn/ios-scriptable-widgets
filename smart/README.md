@@ -33,7 +33,7 @@
 - Go to your iPhone homescreen, swipe down from the upper middle position to see the lock screen, then long press anywhere and configure a new Scriptable widget with bigger size. Assign the created widget.
   <img src="https://github.com/marco79cgn/ios-scriptable-widgets/assets/9810829/013b905d-26a8-4625-8620-d6f61ae568cb" width="250"/>
 
-- Insert your real username, password, vin and api-key as widget parameter, separated by semicolon: `username;password;vin;apikey`
+- Insert your real username, password, and vin as widget parameter, separated by semicolon: `username;password;vin`
   
   <img src="https://github.com/marco79cgn/ios-scriptable-widgets/assets/9810829/1449783d-61b2-4b80-8376-ee7f750b3bf8" width="250"/>
 
