@@ -20,9 +20,9 @@ const param = args.widgetParameter
 if (param != null && param.length > 0) {
   const paramArray = param.split(';')
   if (paramArray.length >= 3) {
-    userName = paramArray[0]
-    password = paramArray[1]
-    vin = paramArray[2]
+    userName = paramArray[0].trim()
+    password = paramArray[1].trim()
+    vin = paramArray[2].trim()
   } else {
     console.log('Error reading user credentials.')
   }
