@@ -93,7 +93,7 @@ Script.complete()
 async function getData() {
   
   widget.addSpacer(2)
-  widget.url = "hellosmartapp://"
+  widget.url = "hellosmart://"
 
   let logoStack = widget.addStack()
   logoStack.layoutHorizontally()
