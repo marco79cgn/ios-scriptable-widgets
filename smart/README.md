@@ -40,6 +40,13 @@
 
 - Press the "Done" button in the upper right to finish the setup.
 
+### Icons
+<a href="https://www.flaticon.com/de/kostenlose-icons/temperatur" title="temperatur Icons">Temperatur Icons erstellt von Good Ware - Flaticon</a>
+
+<a href="https://www.flaticon.com/de/kostenlose-icons/e-mobilitat" title="e-mobilität Icons">E-mobilität Icons erstellt von Danteee82 - Flaticon</a>
+
+<a href="https://www.flaticon.com/free-icons/charging" title="charging icons">Charging icons created by redempticon - Flaticon</a>
+
 
 ### Disclaimer
 Es handelt sich um ein von mir selbst entwickeltes Spaßprojekt, **kein** offizielles Produkt der Marke smart. Ich stehe in keinerlei Beziehung zu smart und bekomme weder Provision noch sonstiges.
