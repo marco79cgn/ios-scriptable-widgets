@@ -30,12 +30,15 @@
 - Download the file [hashes.js](https://raw.githubusercontent.com/marco79cgn/ios-scriptable-widgets/main/smart/modules/hashes.js) into the modules folder you just created
 - Open the Scriptable app on your iPhone, click on the "+" sign on the upper right, copy the [source code](https://raw.githubusercontent.com/marco79cgn/ios-scriptable-widgets/main/smart/smart-one-info-small.js) above and paste it inside.
 - Name the script (at the top of the App) and save it by pressing "Done" in the upper left.
-- Go to your iPhone homescreen, swipe down from the upper middle position to see the lock screen, then long press anywhere and configure a new Scriptable widget with bigger size. Assign the created widget.
+- Go to your iPhone homescreen, swipe down from the upper middle position to see the lock screen, then long press anywhere and press "customize" to configure a new Scriptable widget with bigger size. Assign the created widget.
+  
   <img src="https://github.com/marco79cgn/ios-scriptable-widgets/assets/9810829/013b905d-26a8-4625-8620-d6f61ae568cb" width="250"/>
 
 - Insert your real username, password, and vin as widget parameter, separated by semicolon: `username;password;vin`
   
-  <img src="https://github.com/marco79cgn/ios-scriptable-widgets/assets/9810829/1449783d-61b2-4b80-8376-ee7f750b3bf8" width="250"/>
+  <img src="https://github.com/marco79cgn/ios-scriptable-widgets/assets/9810829/7fa0b107-4b85-4487-9a63-a6f0ca978736" width="250"/>
+
+- Press the "Done" button in the upper right to finish the setup.
 
 
 ### Disclaimer
