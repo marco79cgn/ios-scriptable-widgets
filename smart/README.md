@@ -28,7 +28,7 @@
 ### Setup
 - Create a folder named `modules` inside your iCloud Drive Scriptable folder.
 - Download the file [hashes.js](https://raw.githubusercontent.com/marco79cgn/ios-scriptable-widgets/main/smart/modules/hashes.js) into the modules folder you just created
-- Open the Scriptable app on your iPhone, click on the "+" sign on the upper right, copy the [source code](https://raw.githubusercontent.com/marco79cgn/ios-scriptable-widgets/main/smart/smart-one-info-small.js) above and paste it inside.
+- Open the Scriptable app on your iPhone, click on the "+" sign on the upper right, copy the [source code](https://raw.githubusercontent.com/marco79cgn/ios-scriptable-widgets/main/smart/smart-lockscreen-info.js) above and paste it inside.
 - Name the script (at the top of the App) and save it by pressing "Done" in the upper left.
 - Go to your iPhone homescreen, swipe down from the upper middle position to see the lock screen, then long press anywhere and press "customize" to configure a new Scriptable widget with bigger size. Assign the created widget.
   
